@@ -72,7 +72,7 @@ export default function AddMovieForm({ movies }: Props) {
                   onClick={() => { setSelectedId(movie.id); setSearch(movie.title); }}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-zinc-700/60 transition-colors"
                 >
-                  <div className="relative h-10 w-7 flex-shrink-0 overflow-hidden rounded bg-zinc-700">
+                  <div className="relative isolate h-10 w-7 flex-shrink-0 overflow-hidden rounded bg-zinc-700">
                     {movie.posterUrl ? (
                       <Image src={movie.posterUrl} alt={movie.title} fill sizes="28px" className="object-cover" loading="lazy" />
                     ) : (
@@ -93,7 +93,7 @@ export default function AddMovieForm({ movies }: Props) {
       {/* Selected card */}
       {selected && (
         <div className="flex items-center gap-3 rounded-xl border border-indigo-700/60 bg-indigo-900/20 p-3">
-          <div className="relative h-12 w-8 flex-shrink-0 overflow-hidden rounded bg-zinc-700">
+          <div className="relative isolate h-12 w-8 flex-shrink-0 overflow-hidden rounded bg-zinc-700">
             {selected.posterUrl ? (
               <Image src={selected.posterUrl} alt={selected.title} fill sizes="32px" className="object-cover" loading="lazy" />
             ) : (

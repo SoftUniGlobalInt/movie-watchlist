@@ -45,7 +45,7 @@ export default async function MoviesPage({
               prefetch
               className="group flex flex-col overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-indigo-600/60 transition-colors"
             >
-              <div className="relative aspect-[2/3] w-full overflow-hidden bg-zinc-800">
+              <div className="relative isolate aspect-[2/3] w-full overflow-hidden bg-zinc-800">
                 {movie.posterUrl ? (
                   <Image
                     src={movie.posterUrl}

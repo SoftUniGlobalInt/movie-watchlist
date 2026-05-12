@@ -125,7 +125,7 @@ export default async function DashboardPage({
               className="flex items-center gap-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-700 transition-colors"
             >
               {/* Poster */}
-              <div className="relative hidden sm:block h-16 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-800">
+              <div className="relative isolate hidden sm:block h-16 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-800">
                 {entry.posterUrl ? (
                   <Image
                     src={entry.posterUrl}

@@ -63,7 +63,7 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ sl
 
       <div className="mt-6 flex flex-col gap-8 sm:flex-row">
         {/* Poster */}
-        <div className="w-full sm:w-64 flex-shrink-0">
+        <div className="w-full sm:w-64 flex-shrink-0 isolate">
           <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl bg-zinc-800 shadow-2xl shadow-black/60">
             {movie.posterUrl ? (
               <Image

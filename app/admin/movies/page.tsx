@@ -105,7 +105,7 @@ export default async function AdminMoviesPage({
               {rows.map((movie) => (
                 <tr key={movie.id} className="hover:bg-zinc-900/60 transition-colors">
                   <td className="px-4 py-3">
-                    <div className="relative h-12 w-8 overflow-hidden rounded-md bg-zinc-800">
+                    <div className="relative isolate h-12 w-8 overflow-hidden rounded-md bg-zinc-800">
                       {movie.posterUrl ? (
                         <Image
                           src={movie.posterUrl}

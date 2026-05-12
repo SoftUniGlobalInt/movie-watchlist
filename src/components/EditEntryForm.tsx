@@ -50,7 +50,7 @@ export default function EditEntryForm({ entry }: Props) {
 
       {/* Movie card */}
       <div className="flex items-center gap-4 rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-        <div className="relative h-16 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-800">
+        <div className="relative isolate h-16 w-11 flex-shrink-0 overflow-hidden rounded-lg bg-zinc-800">
           {entry.movie.posterUrl ? (
             <Image
               src={entry.movie.posterUrl}
