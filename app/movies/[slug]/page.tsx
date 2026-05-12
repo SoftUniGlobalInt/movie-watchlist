@@ -21,10 +21,7 @@ async function getMovieStats(movieId: number) {
   return stats;
 }
 
-export async function generateStaticParams() {
-  const all = await db.select({ slug: movies.slug }).from(movies);
-  return all.map((m) => ({ slug: m.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
