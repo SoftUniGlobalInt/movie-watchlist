@@ -3,7 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { db } from "@/src/db";
 import { movies, userMovies } from "@/src/db/schema";
-import { eq, avg, count } from "drizzle-orm";
+import { eq, avg, count, and } from "drizzle-orm";
+import { getSession } from "@/src/lib/auth";
+import { addToWatchlist } from "@/src/lib/actions/watchlist";
 import type { Metadata } from "next";
 
 async function getMovie(slug: string) {
@@ -33,11 +35,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function MovieDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const movie = await getMovie(slug);
+  const [movie, session] = await Promise.all([getMovie(slug), getSession()]);
   if (!movie) notFound();
+
+  // Thin wrapper: form action only allows void return; addToWatchlist may redirect on success.
+  async function addMovieAction(formData: FormData) {
+    "use server";
+    await addToWatchlist({}, formData);
+  }
 
   const stats = await getMovieStats(movie.id);
   const avgRating = stats.avgRating ? parseFloat(String(stats.avgRating)).toFixed(1) : null;
+
+  // Check if this movie is already on the logged-in user's watchlist
+  let alreadyAdded = false;
+  if (session) {
+    const [existing] = await db
+      .select({ id: userMovies.id })
+      .from(userMovies)
+      .where(and(eq(userMovies.userId, session.userId), eq(userMovies.movieId, movie.id)))
+      .limit(1);
+    alreadyAdded = Boolean(existing);
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
@@ -98,13 +117,39 @@ export default async function MovieDetailPage({ params }: { params: Promise<{ sl
           </div>
 
           <div className="mt-8">
-            <Link
-              href="/login"
-              prefetch
-              className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
-            >
-              Add to Watchlist
-            </Link>
+            {!session ? (
+              <Link
+                href={`/login?from=/movies/${slug}`}
+                prefetch
+                className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
+              >
+                Add to Watchlist
+              </Link>
+            ) : alreadyAdded ? (
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-green-900/40 border border-green-700/50 px-6 py-2.5 text-sm font-semibold text-green-300">
+                  ✓ On your watchlist
+                </span>
+                <Link
+                  href="/dashboard"
+                  prefetch
+                  className="text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Go to Dashboard →
+                </Link>
+              </div>
+            ) : (
+              <form action={addMovieAction}>
+                <input type="hidden" name="movieId" value={movie.id} />
+                <input type="hidden" name="status" value="to_watch" />
+                <button
+                  type="submit"
+                  className="rounded-full bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
+                >
+                  Add to Watchlist
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
